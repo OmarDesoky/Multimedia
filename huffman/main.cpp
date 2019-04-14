@@ -65,7 +65,7 @@ vector<unsigned char> decorrelation(vector<unsigned char>&msg)
 			else
 			{
 				
-				msg_decorr.push_back(max(msg[j+i*rows]-msg[j-1+i*rows],msg[j-1+i*rows]-msg[j+i*rows]));
+				msg_decorr.push_back(msg[j+i*rows]-msg[j-1+i*rows]);
 			}
 		}
 	}

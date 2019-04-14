@@ -61,12 +61,13 @@ public:
   // message.
   int encode(const vector<unsigned char>& msg,
              vector<unsigned int>* encoded_msg);
-              
+        
 private:
   // Data members here ... for example to store the tree and the codeword 
   // hash table
   Node* tree;
   map<unsigned char,unsigned int> code_table;
+  map<unsigned char,int>  leng;  
 };
 
 #endif

@@ -32,7 +32,7 @@ float Huffman :: compute_entropy(const vector<unsigned char>& msg,vector<Symbol>
 
 
 // building code table
-void  build_code_table(Node* tree,map<unsigned char,unsigned int> &code_table,string s,string code)
+void  build_code_table(Node* tree,map<unsigned char,unsigned int> &code_table,string s,string code,map<unsigned char,int> &leng)
 {
 	if(s=="left")
 	{
@@ -44,13 +44,14 @@ void  build_code_table(Node* tree,map<unsigned char,unsigned int> &code_table,st
 	}
 	if(tree==nullptr)
 		return;
-	build_code_table(tree->left,code_table,"left",code);
-	build_code_table(tree->right,code_table,"right",code);
+	build_code_table(tree->left,code_table,"left",code,leng);
+	build_code_table(tree->right,code_table,"right",code,leng);
 	if(tree->left==nullptr && tree->right ==nullptr )
 	{
 		stringstream str_to_int(code);
 		int x;
 		str_to_int >> x;
+		leng[tree->symbol.val]=code.size();
 		code_table[tree->symbol.val]=x;
 	}
 }
@@ -82,7 +83,7 @@ void Huffman :: build_tree(const vector<Symbol>& prob)
 		sort(q.begin(),q.end(),compare);
 	}
 	tree = q[0] ;
-	build_code_table(tree,code_table,"begin","");
+	build_code_table(tree,code_table,"begin","",leng);
 }
 
 void Huffman :: print_code_table()
@@ -95,20 +96,13 @@ void Huffman :: print_code_table()
 }
 
 
-int countDigit(unsigned int n) 
-{
-	if(n==0)
-		return 1;
-    return floor(log10(n)+1); 
-} 
-
 int Huffman :: encode(const vector<unsigned char>& msg,vector<unsigned int>* encoded_msg)
 {
 	int avg_code_length=0;
 	for(int i=0;i<msg.size();i++)
 	{
 		unsigned int x =code_table[msg[i]];
-		avg_code_length += countDigit(x);
+		avg_code_length += leng[msg[i]];
 		encoded_msg->push_back(x);
 	}
 	return avg_code_length;
