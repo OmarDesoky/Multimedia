@@ -11,9 +11,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{E3107CA1-6299-4858-B3F8-D0C00C8B3576}</ProjectGuid>
+    <ProjectGuid>{F8D0677D-EB40-481C-80CB-AF49A38632DF}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>huffman</RootNamespace>
+    <RootNamespace>hw1_p1</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -77,7 +77,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="huffman.cpp" />
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="hw1_p1.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="huffman.h" />

@@ -72,33 +72,60 @@ vector<unsigned char> decorrelation(vector<unsigned char>&msg)
 	return msg_decorr;
 }
 
+
+
 int main ()
 {
+	string operation;
+	cin>>operation;
 	string filename;
 	cin>>filename;
 	vector<unsigned char>msg = read(filename);
 	Huffman huffman;
 	vector<Symbol>prob;
-	cout<< huffman.compute_entropy(msg,&prob)<<endl;
-	huffman.build_tree(prob);
-	huffman.print_code_table();
-	vector<unsigned int>encoded;
-	cout<<huffman.encode(msg,&encoded)<<endl;
-
-	cout<<endl;
+	
+	if (operation=="-entropy")
+	{
+		cout<< huffman.compute_entropy(msg,&prob)<<endl;
+		return 0;
+	}
+	if (operation=="-tree")
+	{
+		huffman.build_tree(prob);
+		return 0;
+	}
+	if(operation=="-encode")
+	{
+		huffman.build_tree(prob);
+		cout<<"code table:"<<endl;
+		huffman.print_code_table();
+		vector<unsigned int>encoded;
+		cout<<huffman.encode(msg,&encoded)<<endl;
+		cout<<endl;
+		return 0;
+	}
 
 	// decorrelation
 	vector<unsigned char> msg_decorr = decorrelation(msg);
 	Huffman huffman_decorr;
 	vector<Symbol>prob_decorr;
-	cout<< huffman_decorr.compute_entropy(msg_decorr,&prob)<<endl;
-	huffman_decorr.build_tree(prob);
-	huffman_decorr.print_code_table();
-	vector<unsigned int>encoded_decorr;
-	cout<<huffman_decorr.encode(msg_decorr,&encoded_decorr)<<endl;
-
-
-	int y=0;
-	return 0;
+	if (operation=="-entropy -diff")
+	{
+		cout<< huffman_decorr.compute_entropy(msg_decorr,&prob)<<endl;
+		return 0;
+	}
+	if (operation=="-tree -diff")
+	{
+		huffman_decorr.build_tree(prob);
+		return 0;
+	}
+	if(operation=="-encode -diff")
+	{
+		huffman_decorr.build_tree(prob);
+		huffman_decorr.print_code_table();
+		vector<unsigned int>encoded_decorr;
+		cout<<huffman_decorr.encode(msg_decorr,&encoded_decorr)<<endl;
+		return 0;
+	}
 
 }
