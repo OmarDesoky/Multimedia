@@ -92,9 +92,22 @@ int main ()
 	//}
 
 
+	//vector<bitset<32>> encoded_msg; 
+	//if (operation =="-encode")
+	//{
+	//	int m;
+	//	cin>>m;
+	//	//char arg;
+	//	//cin>>arg;
+	//							//if(arg != '<')
+	//							//{
+	//							//	return 0;
+	//							//}
+	//	string filename;
+	//	cin>>filename;
+	//	vector<unsigned char> msg = read(filename);
+	//	arithmetic.encode(msg,m,&encoded_msg);
+	//}
 
-	string filename;
-	cin>>filename;
-	vector<unsigned char>msg = read(filename);
 
 }

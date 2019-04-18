@@ -9,6 +9,8 @@
 #include <map>
 #include <iterator>
 #include <sstream> 
+#include <set>
+#include <iomanip>
 using namespace std;
 
 class Arithmetic {
@@ -55,7 +57,8 @@ public:
   
                 
 private:
-  // Data members here ... 
+  // Data members here ...
+	vector<map<unsigned char,double>> dictionary;
   
 };
 
