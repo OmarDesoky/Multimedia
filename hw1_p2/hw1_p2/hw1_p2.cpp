@@ -48,6 +48,43 @@ vector<unsigned char> read(string filename)
 	return symbols;
 }
 
+// form a encoded file
+void write_encode(string filename_enc,const vector<bitset<32>>& encoded_msg)
+{
+	filename_enc  = filename_enc.substr(0,filename_enc.size()-4);
+	ofstream outfile;
+	filename_enc+=".enc";
+	outfile.open(filename_enc);
+	for(int i=0;i<encoded_msg.size();i++)
+	{
+		int j=0;
+		for(j;j<encoded_msg[i].size()-1;j++)
+		{
+			outfile<<encoded_msg[i].at(j)<<" ";
+		}
+		outfile<<encoded_msg[i].at(j)<<"\n";
+	}
+
+}
+
+//form a decoded file
+void write_decode(string filename_dec,const vector<unsigned char>& decoded_msg,int xres,int yres,int max)
+{
+	filename_dec  = filename_dec.substr(0,filename_dec.size()-4);
+	ofstream outfile;
+	filename_dec+=".pgm";
+	outfile.open(filename_dec);
+	outfile<<"ï»¿P2\n";
+	outfile<<xres<<" "<<yres<<"\n";
+	outfile<<max<<"\n";
+	int i=0;
+	for(i;i<decoded_msg.size()-1;i++)
+	{
+		outfile<<int(decoded_msg[i])<<" ";
+	}
+	outfile<<int(decoded_msg[i])<<"\n";
+}
+
 void input_hex(bitset<32>&fraction)
 {
 	// get input as hex and save them in x
@@ -92,22 +129,49 @@ int main ()
 	//}
 
 
-	//vector<bitset<32>> encoded_msg; 
+	vector<bitset<32>> encoded_msg; 
 	//if (operation =="-encode")
 	//{
-	//	int m;
-	//	cin>>m;
-	//	//char arg;
-	//	//cin>>arg;
-	//							//if(arg != '<')
-	//							//{
-	//							//	return 0;
-	//							//}
-	//	string filename;
-	//	cin>>filename;
-	//	vector<unsigned char> msg = read(filename);
-	//	arithmetic.encode(msg,m,&encoded_msg);
+		int m;
+		cin>>m;
+		//char arg;
+		//cin>>arg;
+								//if(arg != '<')
+								//{
+								//	return 0;
+								//}
+		string filename;
+		cin>>filename;
+		vector<unsigned char> msg = read(filename);
+		arithmetic.encode(msg,m,&encoded_msg);
+		write_encode(filename,encoded_msg);
+	
 	//}
 
+	/*string flag;
+	cin>>flag;
+	if(flag=="|")
+	{
+
+	}*/
+
+	vector<unsigned char> decoded_msg; 
+	//if(operation == "-decode")
+	//{
+		//int m;
+		cin>>m;
+		//char arg;
+		//cin>>arg;
+		int xres,yres,max;
+		cin>>xres>>yres>>max;
+		//							//if(arg != '<')
+		//							//{
+		//							//	return 0;
+		//							//}
+
+		arithmetic.decode(encoded_msg,m,&decoded_msg);
+		write_decode(filename,decoded_msg,xres,yres,max);
+
+	//}
 
 }

@@ -13,6 +13,7 @@
 #include <iomanip>
 using namespace std;
 
+
 class Arithmetic {
 public:
   // Constructor and destructor
@@ -58,6 +59,7 @@ public:
                 
 private:
   // Data members here ...
+
 	vector<map<unsigned char,double>> dictionary;
   
 };
