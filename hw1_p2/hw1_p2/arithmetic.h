@@ -59,9 +59,7 @@ public:
                 
 private:
   // Data members here ...
-
-	vector<map<unsigned char,double>> dictionary;
-  
+	map<unsigned char,double> cdf;
 };
 
 #endif

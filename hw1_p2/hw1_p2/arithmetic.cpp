@@ -3,8 +3,6 @@
 
 // Your implementations here
 
-
-
 double Arithmetic:: binary_to_decimal(const bitset<32>& fraction)
 {
 	double deciaml=0;
@@ -39,71 +37,65 @@ bitset<32> Arithmetic:: decimal_to_binary(double fraction)
 
 int Arithmetic :: encode(const vector<unsigned char>& msg, int num_symbols_per_block, vector<bitset<32> >* encoded_msg)
 {
-	// initalizing frequency of uniq symbols for each block
+	// getting pdf
+	int i=0;
+	for(i;i<msg.size();i++)
+	{
+		cdf[msg[i]]++;
+	}
+	for(map<unsigned char,double> ::iterator it = cdf.begin(); it !=cdf.end() ;it++)
+	{
+		// div by num_symbols to get probability of each symbols (PDF)
+		it->second = it->second/(i);
+		// calcuating CDF
+		if(it!=cdf.begin())
+		{
+			map<unsigned char,double> ::iterator previous;
+			previous = it;
+			previous--;
+			it->second = it->second + previous->second;
+		}
+	}
+	//performing arthimetic encoding
+	int num_bits=0;
+	//to loop through msg
+	int k=0;
 	for(int i=0;i<msg.size();i+=num_symbols_per_block)
 	{
-		map<unsigned char,double> dic_frequency;
-		int j=0;
-		for(j;j<num_symbols_per_block && (j+i) < msg.size() ;j++)
+		double u ,l;
+		for(int j=0;j<num_symbols_per_block && k<msg.size(); j++)
 		{
-			dic_frequency[msg[j+i]]++;
-		}
-
-		for(map<unsigned char,double> ::iterator it = dic_frequency.begin(); it !=dic_frequency.end() ;it++)
-		{
-			// div by num_symbols to get probability of each symbols (PDF)
-			it->second = it->second/(j);
-			// calcuating CDF
-			if(it!=dic_frequency.begin())
+			map<unsigned char,double> ::iterator it= cdf.find(msg[k++]);
+			if(j==0)//intialize l and u
 			{
-				map<unsigned char,double> ::iterator previous;
-				previous = it;
-				previous--;
-				it->second = it->second + previous->second;
+				u=it->second;
+				if(cdf.begin()->first == it->first)    // first symbol
+				{
+					l = 0;
+				}
+				else
+				{
+					it--;
+					l =it->second;
+					it++;
+				}
+				continue;
 			}
-		}
-
-		dictionary.push_back(dic_frequency);
-	}
-	int num_bits =0;
-	// for looping through msg
-	int k=0;
-	// performing arthimetic encoding
-	for(int i=0;i<dictionary.size();i++)
-	{
-		double l,u;
-		if(msg[k] == dictionary[i].begin()->first)// first symbol
-		{
-			l = 0;
-		}
-		else
-		{
-			map<unsigned char,double> ::iterator it= dictionary[i].find(msg[k]);
-			l = it->second;
-			it--;
-			l -=it->second;
-		}
-		u =dictionary[i].at(msg[k++]);
-		for(int j=1;j<num_symbols_per_block && k<msg.size();j++)
-		{
-			map<unsigned char,double> ::iterator cdf;
-			cdf = dictionary[i].find(msg[k]);
 			double l_old=l;
 			double u_old=u;
-			u = l_old + (u_old-l_old)* cdf->second;
-			cdf--;
-			// if not the first symbol in the dictionary
-			if( msg[k] != dictionary[i].begin()->first)
-				l = l_old + (u_old-l_old)* cdf->second;
-			k++;
+			u = l_old + (u_old-l_old)* (it->second);
+			// getting cdf_prev
+			if(cdf.begin()->first != it->first) // not first symbol
+			{
+				it--;
+				l= l_old + (u_old-l_old)* (it->second);
+			}
 		}
-		double  tag = (l+u)/2.0;
-		tag = floor(tag * 10000.) / 10000.;
+		double tag=(u+l)/2;
+		num_bits+=32;
 		bitset<32> encoded_block = decimal_to_binary(tag);
 		encoded_msg->push_back(encoded_block);
-
-		num_bits+=32;
-		for(int e=31;e>=0;e--)
+		for(int e=0;e<32;e++)
 		{
 			if(encoded_block[e]!=1)
 			{
@@ -115,44 +107,42 @@ int Arithmetic :: encode(const vector<unsigned char>& msg, int num_symbols_per_b
 			}
 		}
 	}
+
 	return num_bits;
 }
-
 
 void Arithmetic :: decode(const vector<bitset<32>>& encoded_msg, int num_symbols_per_block, vector<unsigned char>* decoded_msg)
 {
 	for(int i=0;i<encoded_msg.size();i++)
 	{
 		double tag = binary_to_decimal(encoded_msg[i]);
-
-		double l_old=0;
-		double u_old=1;
-
+		double l=0;
+		double u=1;
 		for(int j=0;j<num_symbols_per_block;j++)
 		{
-			double t = (tag-l_old)/(u_old-l_old);
+			double t;
+			if(u==l)
+				t=u;
+			else
+				t = (tag-l)/(u-l);
 			map<unsigned char,double> ::iterator it;
-			for(it =dictionary[i].begin() ;it!=dictionary[i].end();it++)
+			for(it =cdf.begin() ;it!=cdf.end();it++)
 			{
-				if(it->second >= t)
+				if(t<=it->second)
 				{
 					decoded_msg->push_back(it->first);
-
 					break;
 				}
 			}
-			double u=l_old + (u_old-l_old)*(it->second);
-			u_old=u;
-			if(it!=dictionary[i].begin())
+			//calculating new l and u
+			double l_old=l;
+			double u_old=u;
+			u=l_old + (u_old-l_old)*(it->second);
+			if(it->first != cdf.begin()->first)
 			{
 				it--;
-				double l=l_old + (u_old-l_old)*(it->second);
-				l_old=l;
+				l=l_old + (u_old-l_old)*(it->second);
 			}
-			//if (l_old == 0 && u_old==1)
-			//{
-			//	break;
-			//}
 		}
 	}
 }

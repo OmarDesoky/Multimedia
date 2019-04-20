@@ -143,7 +143,11 @@ int main ()
 		string filename;
 		cin>>filename;
 		vector<unsigned char> msg = read(filename);
-		arithmetic.encode(msg,m,&encoded_msg);
+		int after = arithmetic.encode(msg,m,&encoded_msg);
+		cout<<endl;
+		cout<<"Number of symbols per tag: "<<after<<endl;
+		cout<<"Compression ratio: ";
+		cout<<(float(after)/(8*rows*cols))<<endl;
 		write_encode(filename,encoded_msg);
 	
 	//}
@@ -170,6 +174,7 @@ int main ()
 		//							//}
 
 		arithmetic.decode(encoded_msg,m,&decoded_msg);
+		cout<<endl;
 		write_decode(filename,decoded_msg,xres,yres,max);
 
 	//}
