@@ -60,7 +60,11 @@ public:
 private:
   // Data members here ...
 
-	vector<map<unsigned char,double>> dictionary;
+
+	vector<pair<unsigned char,double>> prob_table;
+
+
+	//vector<map<unsigned char,double>> dictionary;
   
 };
 

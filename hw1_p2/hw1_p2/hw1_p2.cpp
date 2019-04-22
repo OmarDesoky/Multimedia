@@ -169,7 +169,7 @@ int main ()
 		//							//	return 0;
 		//							//}
 
-		arithmetic.decode(encoded_msg,m,&decoded_msg);
+		//arithmetic.decode(encoded_msg,m,&decoded_msg);
 		write_decode(filename,decoded_msg,xres,yres,max);
 
 	//}
