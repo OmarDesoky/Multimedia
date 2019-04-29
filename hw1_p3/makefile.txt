@@ -1,0 +1,15 @@
+CC=g++
+CFLAGS=-c -Wall
+LDFLAGS=
+SOURCES=lz77.h lz77.cpp hw1_p3.cpp
+OBJECTS=$(SOURCES:.cpp=.o)
+EXECUTABLE=hw1_p3
+
+all: $(SOURCES) $(EXECUTABLE)
+	
+$(EXECUTABLE): $(OBJECTS)
+	$(CC) $(LDFLAGS) $(OBJECTS) -o $@
+
+.cpp.o:
+	$(CC) $(CFLAGS) $< -o $@
+
